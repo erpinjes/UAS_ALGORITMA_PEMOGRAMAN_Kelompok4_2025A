@@ -41,4 +41,3 @@ data.to_csv("../output/hasil_klasifikasi.csv", index=False)
 
 print("\nData dengan klasifikasi:")
 print(data[["score", "Kategori"]].head())
-
