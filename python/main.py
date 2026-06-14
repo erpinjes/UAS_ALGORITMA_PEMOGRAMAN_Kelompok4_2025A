@@ -1,21 +1,14 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# ============================
-# BACA DATASET
-# ============================
 data = pd.read_csv("../dataset/sustainability_data.csv")
 
-# Ringkasan data
 with open("../output/laporan_sustainability_py.txt", "w") as f:
     f.write("Jumlah baris: " + str(len(data)) + "\n")
     f.write("Jumlah kolom: " + str(len(data.columns)) + "\n\n")
     f.write("Nama kolom:\n" + str(data.columns.tolist()) + "\n\n")
     f.write("Statistik dasar:\n" + str(data.describe()))
 
-# ============================
-# KLASIFIKASI
-# ============================
 def klasifikasi(nilai):
     if nilai >= 80:
         return "Baik"
@@ -27,11 +20,7 @@ def klasifikasi(nilai):
 data["Kategori"] = data["nilai"].apply(klasifikasi)
 data.to_csv("../output/hasil_klasifikasi_py.csv", index=False)
 
-# ============================
-# VISUALISASI DATA (SAVE PNG ke docs)
-# ============================
 
-# 1. Distribusi kategori
 plt.style.use("seaborn-v0_8")
 kategori_counts = data["Kategori"].value_counts()
 ax = kategori_counts.plot(kind="bar", color=["green", "orange", "red"], edgecolor="black")
@@ -45,7 +34,6 @@ for p in ax.patches:
 plt.savefig("../docs/distribusi_kategori.png")
 plt.close()
 
-# 2. Rata-rata nilai per parameter
 avg_per_param = data.groupby("parameter")["nilai"].mean()
 avg_per_param.plot(kind="bar", color="skyblue", edgecolor="black")
 plt.title("Rata-rata Nilai per Parameter", fontsize=14, fontweight="bold")
@@ -54,14 +42,12 @@ plt.ylabel("Rata-rata Nilai")
 plt.savefig("../docs/rata_rata_per_parameter.png")
 plt.close()
 
-# 3. Boxplot distribusi nilai
 plt.boxplot(data["nilai"])
 plt.title("Boxplot Distribusi Nilai", fontsize=14, fontweight="bold")
 plt.ylabel("Nilai")
 plt.savefig("../docs/boxplot_nilai.png")
 plt.close()
 
-# 4. Tren nilai Energy per bulan
 data["tanggal"] = pd.to_datetime(data["tanggal"])
 energy_data = data[data["parameter"] == "Energy"]
 monthly_avg = energy_data.groupby(data["tanggal"].dt.to_period("M"))["nilai"].mean()
