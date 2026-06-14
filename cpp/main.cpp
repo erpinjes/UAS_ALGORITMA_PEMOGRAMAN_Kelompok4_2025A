@@ -90,7 +90,6 @@ int main() {
         ringkasan << dataset[i].nilai << "\t" << dataset[i].kategori << endl;
     }
 
-    // Simpan hasil klasifikasi ke CSV
     hasil << "tanggal,lokasi,parameter,nilai,satuan,Kategori\n";
     for (auto &d : dataset) {
         hasil << d.tanggal << "," << d.lokasi << "," << d.parameter << ","
