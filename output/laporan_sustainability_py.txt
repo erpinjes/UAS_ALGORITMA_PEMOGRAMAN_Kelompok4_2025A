@@ -1,0 +1,16 @@
+Jumlah baris: 29200
+Jumlah kolom: 5
+
+Nama kolom:
+['tanggal', 'lokasi', 'parameter', 'nilai', 'satuan']
+
+Statistik dasar:
+              nilai
+count  29200.000000
+mean     381.398747
+std      333.184105
+min        5.030000
+25%       75.005000
+50%      243.215000
+75%      654.557500
+max     1199.710000

@@ -1,0 +1,23 @@
+Jumlah baris: 29200
+Jumlah kolom: 5
+
+Nama kolom:
+['tanggal', 'lokasi', 'parameter', 'nilai', 'satuan']
+
+Statistik dasar:
+count	29200
+mean	381.399
+std	333.178
+min	5.03
+25%	80.01
+50%	243.22
+75%	654.58
+max	1199.71
+
+Data dengan klasifikasi:
+nilai	Kategori
+188.7	Baik
+225.01	Baik
+501.27	Baik
+17.28	Kurang
+205.2	Baik
