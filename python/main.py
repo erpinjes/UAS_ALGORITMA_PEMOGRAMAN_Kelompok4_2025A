@@ -1,30 +1,21 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
-# Baca dataset
+# ============================
+# BACA DATASET
+# ============================
 data = pd.read_csv("../dataset/sustainability_data.csv")
 
 # Ringkasan data
-print("Jumlah baris:", len(data))
-print("Jumlah kolom:", len(data.columns))
-print("\nNama kolom:")
-print(data.columns.tolist())
-
-# Tampilkan 5 data pertama
-print("\nData sample:")
-print(data.head())
-
-# Statistik dasar
-print("\nStatistik dasar:")
-print(data.describe())
-
-# Simpan ringkasan ke file
-with open("../output/ringkasan.txt", "w") as f:
+with open("../output/laporan_sustainability_py.txt", "w") as f:
     f.write("Jumlah baris: " + str(len(data)) + "\n")
     f.write("Jumlah kolom: " + str(len(data.columns)) + "\n\n")
     f.write("Nama kolom:\n" + str(data.columns.tolist()) + "\n\n")
     f.write("Statistik dasar:\n" + str(data.describe()))
 
-# Fungsi klasifikasi sederhana
+# ============================
+# KLASIFIKASI
+# ============================
 def klasifikasi(nilai):
     if nilai >= 80:
         return "Baik"
@@ -33,11 +24,50 @@ def klasifikasi(nilai):
     else:
         return "Kurang"
 
-# Tambahin kolom kategori (ganti 'score' sesuai nama kolom di dataset lu)
-data["Kategori"] = data["score"].apply(klasifikasi)
+data["Kategori"] = data["nilai"].apply(klasifikasi)
+data.to_csv("../output/hasil_klasifikasi_py.csv", index=False)
 
-# Simpan hasil klasifikasi ke file CSV
-data.to_csv("../output/hasil_klasifikasi.csv", index=False)
+# ============================
+# VISUALISASI DATA (SAVE PNG ke docs)
+# ============================
 
-print("\nData dengan klasifikasi:")
-print(data[["score", "Kategori"]].head())
+# 1. Distribusi kategori
+plt.style.use("seaborn-v0_8")
+kategori_counts = data["Kategori"].value_counts()
+ax = kategori_counts.plot(kind="bar", color=["green", "orange", "red"], edgecolor="black")
+plt.title("Distribusi Kategori", fontsize=14, fontweight="bold")
+plt.xlabel("Kategori")
+plt.ylabel("Jumlah Data")
+for p in ax.patches:
+    ax.annotate(str(int(p.get_height())),
+                (p.get_x() + p.get_width() / 2., p.get_height()),
+                ha='center', va='bottom')
+plt.savefig("../docs/distribusi_kategori.png")
+plt.close()
+
+# 2. Rata-rata nilai per parameter
+avg_per_param = data.groupby("parameter")["nilai"].mean()
+avg_per_param.plot(kind="bar", color="skyblue", edgecolor="black")
+plt.title("Rata-rata Nilai per Parameter", fontsize=14, fontweight="bold")
+plt.xlabel("Parameter")
+plt.ylabel("Rata-rata Nilai")
+plt.savefig("../docs/rata_rata_per_parameter.png")
+plt.close()
+
+# 3. Boxplot distribusi nilai
+plt.boxplot(data["nilai"])
+plt.title("Boxplot Distribusi Nilai", fontsize=14, fontweight="bold")
+plt.ylabel("Nilai")
+plt.savefig("../docs/boxplot_nilai.png")
+plt.close()
+
+# 4. Tren nilai Energy per bulan
+data["tanggal"] = pd.to_datetime(data["tanggal"])
+energy_data = data[data["parameter"] == "Energy"]
+monthly_avg = energy_data.groupby(data["tanggal"].dt.to_period("M"))["nilai"].mean()
+monthly_avg.plot(kind="line", marker="o", color="blue")
+plt.title("Tren Rata-rata Energy per Bulan", fontsize=14, fontweight="bold")
+plt.xlabel("Bulan")
+plt.ylabel("Rata-rata Energy (kWh)")
+plt.savefig("../docs/tren_energy_per_bulan.png")
+plt.close()
